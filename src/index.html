@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulatore Cubo di Rubik 3x3x3</title>
+    <link href="styles.css" rel="stylesheet" />
+</head>
+<body>
+<div class="container">
+    <h1>Simulatore Cubo di Rubik 3x3x3</h1>
+
+    <div class="visualizzazioni">
+        <div id="cubo-3d-container">
+            <!-- il cubo viene generato -->
+        </div>
+    </div>
+
+    <!-- PANNELLO CONTROLLI -->
+    <div class="pulsanti">
+        <div class="controlli">
+            <button id="btn-mischia">🔀 Mischia</button>
+            <button id="btn-risolvi">🎯 Risolvi</button>
+            <button id="btn-reset">🔄 Reset</button>
+        </div>
+
+        <div class="mosse">
+            <div class="sinistra">
+                <button id="left" onclick="Left()">L</button>
+
+            </div>
+            <div class="centro">
+                <button id="up" onclick="Up()">U</button>
+                <button id="front" onclick="Front()">F</button>
+                <button id="down" onclick="Down()">D</button>
+            </div>
+            <div class="destra">
+                <button id="right" onclick="Right()">R</button>
+            </div>
+            <div class="dietro">
+                <button id="back" onclick="Back()">B</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="stato-messaggio">Pronto per iniziare!</div>
+</div>
+
+<!-- Importa Three.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="script.js"></script>
+</body>
+</html>

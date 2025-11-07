@@ -1,0 +1,190 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.container {
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    padding: 30px;
+    max-width: 1400px;
+    width: 100%;
+}
+
+h1 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 30px;
+    font-size: 2.5em;
+}
+
+.visualizzazioni {
+    display: grid;
+    gap: 30px;
+    margin-bottom: 30px;
+}
+
+/* CUBO 3D */
+#cubo-3d-container {
+    background: #f0f0f0;
+    border-radius: 15px;
+    height: 500px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: inset 0 2px 10px rgba(0,0,0,0.1);
+}
+
+#cubo-3d-container canvas {
+    display: block;
+    width: 100% !important;
+    height: 100% !important;
+}
+
+
+.faccia {
+    display: grid;
+    grid-template-columns: repeat(3, 18px);
+    grid-template-rows: repeat(3, 18px);
+    gap: 2px;
+    padding: 2px;
+    background: #333;
+    border-radius: 3px;
+}
+
+.faccia-placeholder {
+    background: transparent;
+}
+
+/* Posizionamento facce nel layout a croce */
+.faccia-U { grid-column: 2; grid-row: 1; }
+.faccia-L { grid-column: 1; grid-row: 2; }
+.faccia-F { grid-column: 2; grid-row: 2; }
+.faccia-R { grid-column: 3; grid-row: 2; }
+.faccia-B { grid-column: 4; grid-row: 2; }
+.faccia-D { grid-column: 2; grid-row: 3; }
+
+.quadratino {
+    border-radius: 2px;
+    border: 1px solid rgba(0,0,0,0.2);
+}
+
+/* Colori */
+.color-W { background-color: #ffffff; }
+.color-Y { background-color: #ffff00; }
+.color-G { background-color: #00ff00; }
+.color-B { background-color: #0000ff; }
+.color-O { background-color: #ff8800; }
+.color-R { background-color: #ff0000; }
+
+/* PANNELLO CONTROLLI */
+.pulsanti {
+    background: #f0f0f0;
+    border-radius: 15px;
+    padding: 25px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    justify-content: center;
+    align-items: center;
+}
+
+button {
+    padding: 12px 30px;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.mosse{
+    column-count: 3;
+
+}
+
+.centro {
+    display: flex;
+    flex-direction: column;
+}
+
+#btn-mischia {
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    color: white;
+}
+
+#btn-risolvi {
+    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    color: white;
+}
+
+#btn-reset {
+    background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+    color: white;
+}
+
+button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+}
+
+button:active {
+    transform: translateY(0);
+}
+
+button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+}
+
+
+
+#stato-messaggio {
+    width: 100%;
+    text-align: center;
+    padding: 10px;
+    background: #e8f5e9;
+    border-radius: 8px;
+    color: #2e7d32;
+    font-weight: bold;
+    margin-top: 15px;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+    .visualizzazioni {
+        grid-template-columns: 1fr;
+    }
+
+    #cubo-3d-container {
+        height: 400px;
+    }
+}
+
+@media (max-width: 768px) {
+    h1 {
+        font-size: 1.8em;
+    }
+
+    .controlli {
+        flex-direction: column;
+    }
+
+    button {
+        width: 100%;
+    }
+}
