@@ -112,45 +112,28 @@ button {
 }
 
 .mosse{
-    column-count: 3;
+    column-count: 4;
 
 }
-
 .centro {
     display: flex;
     flex-direction: column;
 }
 
 #btn-mischia {
-    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    background-color: steelblue;
     color: white;
 }
 
 #btn-risolvi {
-    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    background-color: forestgreen;
     color: white;
 }
 
 #btn-reset {
-    background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+    background-color: red;
     color: white;
 }
-
-button:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-}
-
-button:active {
-    transform: translateY(0);
-}
-
-button:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-    transform: none;
-}
-
 
 
 #stato-messaggio {
