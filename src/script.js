@@ -13,44 +13,62 @@ class CuboRubik {
             R: [['R','R','R'], ['R','R','R'], ['R','R','R']]
         };
     }
+    //NON VA UN CAZZO DI NIENTEEEEEEEEE!!!!!!!!!!
+    ruotaFaccia(matrice){
+        return [
+            [matrice[2][0], matrice[1][0], matrice[0][0]],
+            [matrice[2][1], matrice[1][1], matrice[0][1]],
+            [matrice[2][2], matrice[1][2], matrice[0][2]]
+        ];
+        console.log("DIOJS");
+    }
+    aggiorna() {
+        for (let i = 0; i < 3; i++) {
+            for (let j = 0; j < 3; j++) {
+
+                const colore = this.stato.R[i][j];
+
+                // Esempio: aggiorni il materiale
+                this.meshFacce.R[i][j].material.color.set(colore);
+                console.log("DIOJ");
+            }
+        }
+    }
+
+
 
     // Placeholder per le mosse - da implementare
     Right() { //NON FUNZIONA
-        // 1. Seleziona e raggruppa
-        const cubettiFacciaR = cubetti.filter(c => Math.abs(c.x - 1) < 0.01);
-        const gruppo = new THREE.Group();
-        scene.add(gruppo);
+        const faccia = this.stato.R;
+        this.stato.R= this.ruotaFaccia(faccia);
 
-        cubettiFacciaR.forEach(c => {
-            scene.remove(c.mesh);
-            gruppo.add(c.mesh);
-        });
-        animating = true;
-
-        // 2. Anima con GSAP
-        gsap.to(gruppo.rotation, {
-            x: Math.PI / 2,
-            duration: durata,
-            ease: "power2.out",
-            onComplete: () => {
-                finalizzaRotazione(gruppo, cubettiFacciaR);
-            }
-        });
     }
+
+
     Left() {
-
+        let faccia = this.stato.L;
+        this.ruotaFaccia(faccia);
     }
+
     Up() {
-
+        let faccia = this.stato.U;
+        this.ruotaFaccia(faccia);
     }
+
     Down() {
+        let faccia = this.stato.D;
+        this.ruotaFaccia(faccia);
 
     }
+
     Front() {
-
+        let faccia = this.stato.F;
+        this.ruotaFaccia(faccia);
     }
-    Back() {
 
+    Back() {
+        let faccia = this.stato.B;
+        this.ruotaFaccia(faccia);
     }
 }
 
@@ -82,15 +100,10 @@ function inizializzaCubo3D() {
     const ambientLight = new THREE.AmbientLight(0xffffff, 1);
     scene.add(ambientLight);
 
-    //luce diretta sull'oggetto
-    const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
-    directionalLight.position.set(5, 5, 5);
-    scene.add(directionalLight);
-
     // Crea i 27 cubetti
     creaCubetti();
 
-    // Animazione quando il cubo è fermo
+    //permette di vedere il cubo 3D sullo schermo
     renderer.render(scene, camera);
     // Rotazione col mouse
     let isMouseDown = false;
@@ -115,7 +128,7 @@ function inizializzaCubo3D() {
         renderer.render(scene, camera);
     });
 
-    // Responsive
+    // adatta l'immagine allo schermo
     window.addEventListener('resize', () => {
         const width = container.clientWidth;
         const height = container.clientHeight;
@@ -126,7 +139,7 @@ function inizializzaCubo3D() {
 }
 
 function creaCubetti() {
-    const size = 0.9;
+    const size = 1;
     const gap = 0.05;
 
     const coloriMap = {
@@ -137,6 +150,7 @@ function creaCubetti() {
         'z1': 0x00ff00,   // Verde (Front)
         'z-1': 0x0000ff   // Blu (Back)
     };
+    this.meshFacce = { U: [], D: [], L: [], R: [], F: [], B: [] };
 
     for (let x = -1; x <= 1; x++) {
         for (let y = -1; y <= 1; y++) {
@@ -145,22 +159,22 @@ function creaCubetti() {
 
                 // Materiali per le 6 facce
                 const materials = [
-                    new THREE.MeshLambertMaterial({
+                    new THREE.MeshBasicMaterial({
                         color: x === 1 ? coloriMap['x1'] : 0x000000
                     }), // destra
-                    new THREE.MeshLambertMaterial({
+                    new THREE.MeshBasicMaterial({
                         color: x === -1 ? coloriMap['x-1'] : 0x000000
                     }), // sinistra
-                    new THREE.MeshLambertMaterial({
+                    new THREE.MeshBasicMaterial({
                         color: y === 1 ? coloriMap['y1'] : 0x000000
                     }), // su
-                    new THREE.MeshLambertMaterial({
+                    new THREE.MeshBasicMaterial({
                         color: y === -1 ? coloriMap['y-1'] : 0x000000
                     }), // giù
-                    new THREE.MeshLambertMaterial({
+                    new THREE.MeshBasicMaterial({
                         color: z === 1 ? coloriMap['z1'] : 0x000000
                     }), // fronte
-                    new THREE.MeshLambertMaterial({
+                    new THREE.MeshBasicMaterial({
                         color: z === -1 ? coloriMap['z-1'] : 0x000000
                     })  // retro
                 ];
@@ -175,14 +189,18 @@ function creaCubetti() {
 
                 // Bordi neri
                 const edges = new THREE.EdgesGeometry(geometry);
-                const line = new THREE.LineSegments(
-                    edges,
-                    new THREE.LineBasicMaterial({ color: 0x000000, linewidth: 2 })
-                );
+                const line = new THREE.LineSegments(edges, new THREE.LineBasicMaterial({ color: 0x000000, linewidth: 2 }));
                 cubetto.add(line);
 
                 cubetti.push({ mesh: cubetto, x, y, z });
                 scene.add(cubetto);
+
+                if (y === 1) this.meshFacce.U.push(cubetto);
+                if (y === -1) this.meshFacce.D.push(cubetto);
+                if (x === 1) this.meshFacce.R.push(cubetto);
+                if (x === -1) this.meshFacce.L.push(cubetto);
+                if (z === 1) this.meshFacce.F.push(cubetto);
+                if (z === -1) this.meshFacce.B.push(cubetto);
             }
         }
     }
@@ -191,41 +209,21 @@ function creaCubetti() {
 // ========== CONTROLLI ==========
 
 document.getElementById('btn-mischia').addEventListener('click', () => {
-    aggiornaMesaggio('Mischiando il cubo...', '#fff3e0', '#e65100');
-    contatoreMosse = 0;
 
     // Placeholder - da implementare con mosse casuali
-    setTimeout(() => {
-        aggiornaMesaggio('Cubo mischiato!', '#e8f5e9', '#2e7d32');
-    }, 1000);
 });
 
 document.getElementById('btn-risolvi').addEventListener('click', () => {
-    aggiornaMesaggio('Risolvendo il cubo...', '#e3f2fd', '#1565c0');
-    document.getElementById('fase-corrente').textContent = 'In corso...';
-
     // Placeholder - da implementare con algoritmo
-    setTimeout(() => {
-        aggiornaMesaggio('Cubo risolto!', '#e8f5e9', '#2e7d32');
-        document.getElementById('fase-corrente').textContent = 'Risolto';
-    }, 2000);
 });
 
 document.getElementById('btn-reset').addEventListener('click', () => {
     cubo.reset();
-    aggiornaMesaggio('Cubo resettato!', '#e8f5e9', '#2e7d32');
-});
 
-function aggiornaMesaggio(testo, bgColor, textColor) {
-    const messaggio = document.getElementById('stato-messaggio');
-    messaggio.textContent = testo;
-    messaggio.style.backgroundColor = bgColor;
-    messaggio.style.color = textColor;
-}
+});
 
 // ========== INIZIALIZZAZIONE ==========
 
 window.addEventListener('DOMContentLoaded', () => {
     inizializzaCubo3D();
-    console.log('✅ Cubo di Rubik inizializzato!');
 });
