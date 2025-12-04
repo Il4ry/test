@@ -13,62 +13,47 @@ class CuboRubik {
             R: [['R','R','R'], ['R','R','R'], ['R','R','R']]
         };
     }
-    //NON VA UN CAZZO DI NIENTEEEEEEEEE!!!!!!!!!!
+
+    //(non è vero)funzione che ruota una faccia del cubo
     ruotaFaccia(matrice){
         return [
             [matrice[2][0], matrice[1][0], matrice[0][0]],
             [matrice[2][1], matrice[1][1], matrice[0][1]],
             [matrice[2][2], matrice[1][2], matrice[0][2]]
         ];
-        console.log("DIOJS");
     }
-    aggiorna() {
-        for (let i = 0; i < 3; i++) {
-            for (let j = 0; j < 3; j++) {
+    getCol(faccia, indice) { //prende la colonna della faccia che cambia
+        return this.stato[faccia].map(row => row[indice]);
+    }
 
-                const colore = this.stato.R[i][j];
+    // Imposta la colonna 'indice' della faccia specificata
+    setCol(faccia, indice, col) {
+        this.stato[faccia].forEach((row, i) => row[indice] = col[i]);
+    }
 
-                // Esempio: aggiorni il materiale
-                this.meshFacce.R[i][j].material.color.set(colore);
-                console.log("DIOJ");
-            }
+    aggiorna (matrice){
+        switch (matrice){
+            case 'R':
+                const temp = this.getCol('U', 0);
+                // Prendi la colonna destra della faccia posteriore (B)
+                const colB = this.getCol('B', 2);
+                this.setCol('U', 0, [colB[2], colB[1], colB[0]]); //salva la colonna di B su U
+                const colD = this.getCol('D', 0);
+                this.setCol('B', 2, [colD[2], colD[1], colD[0]]);
+                // D ← F
+                const colF = this.getCol('F', 0);
+                this.setCol('D', 0, colF);
+                // F ← U originale (salvato in temp)
+                this.setCol('F', 0, temp);
+                break;
         }
     }
-
-
-
+    //manca come mostrarlo a schermo
     // Placeholder per le mosse - da implementare
     Right() { //NON FUNZIONA
-        const faccia = this.stato.R;
-        this.stato.R= this.ruotaFaccia(faccia);
-
-    }
-
-
-    Left() {
-        let faccia = this.stato.L;
-        this.ruotaFaccia(faccia);
-    }
-
-    Up() {
-        let faccia = this.stato.U;
-        this.ruotaFaccia(faccia);
-    }
-
-    Down() {
-        let faccia = this.stato.D;
-        this.ruotaFaccia(faccia);
-
-    }
-
-    Front() {
-        let faccia = this.stato.F;
-        this.ruotaFaccia(faccia);
-    }
-
-    Back() {
-        let faccia = this.stato.B;
-        this.ruotaFaccia(faccia);
+        this.stato.R= this.ruotaFaccia(this.stato.R);
+        this.aggiorna('R');
+        this.aggiornaCubetti3D('R');
     }
 }
 
@@ -150,7 +135,7 @@ function creaCubetti() {
         'z1': 0x00ff00,   // Verde (Front)
         'z-1': 0x0000ff   // Blu (Back)
     };
-    this.meshFacce = { U: [], D: [], L: [], R: [], F: [], B: [] };
+
 
     for (let x = -1; x <= 1; x++) {
         for (let y = -1; y <= 1; y++) {
@@ -192,15 +177,10 @@ function creaCubetti() {
                 const line = new THREE.LineSegments(edges, new THREE.LineBasicMaterial({ color: 0x000000, linewidth: 2 }));
                 cubetto.add(line);
 
-                cubetti.push({ mesh: cubetto, x, y, z });
+                cubetti.push();
                 scene.add(cubetto);
 
-                if (y === 1) this.meshFacce.U.push(cubetto);
-                if (y === -1) this.meshFacce.D.push(cubetto);
-                if (x === 1) this.meshFacce.R.push(cubetto);
-                if (x === -1) this.meshFacce.L.push(cubetto);
-                if (z === 1) this.meshFacce.F.push(cubetto);
-                if (z === -1) this.meshFacce.B.push(cubetto);
+
             }
         }
     }
