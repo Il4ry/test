@@ -33,27 +33,23 @@ class CuboRubik {
 
     aggiorna (matrice){
         switch (matrice){
-            case 'R':
-                const temp = this.getCol('U', 0);
-                // Prendi la colonna destra della faccia posteriore (B)
-                const colB = this.getCol('B', 2);
-                this.setCol('U', 0, [colB[2], colB[1], colB[0]]); //salva la colonna di B su U
-                const colD = this.getCol('D', 0);
-                this.setCol('B', 2, [colD[2], colD[1], colD[0]]);
-                // D ← F
-                const colF = this.getCol('F', 0);
-                this.setCol('D', 0, colF);
-                // F ← U originale (salvato in temp)
-                this.setCol('F', 0, temp);
+            case 'R': //fa i cambi giusti
+                const temp = this.getCol('U', 2);//variabile temporanea per salvare la colonna destra della faccia superiore(U)
+                const colB = this.getCol('B', 0);
+                const colD = this.getCol('D', 2);
+                const colF = this.getCol('F', 2);
+                this.setCol('D', 2, [colB[2], colB[1], colB[0]]);//B su D
+                this.setCol('F', 2, [colD[2], colD[1], colD[0]]); //salva D su F (giusto)
+                this.setCol('U', 2, colF); //salva la colonna di F su U(giusto)
+                this.setCol('B', 0, temp);//salva la colonna di U su B
                 break;
         }
     }
     //manca come mostrarlo a schermo
-    // Placeholder per le mosse - da implementare
     Right() { //NON FUNZIONA
         this.stato.R= this.ruotaFaccia(this.stato.R);
         this.aggiorna('R');
-        this.aggiornaCubetti3D('R');
+
     }
 }
 
@@ -185,17 +181,80 @@ function creaCubetti() {
         }
     }
 }
+  //DA CONTROLLARE LA MAPPATURA
+function aggiornaColoriCubo3D() {
+    // Per ogni cubetto nella scena
+    cubetti.forEach(cubetto => {
+        const { x, y, z } = cubetto.userData;
+
+        // Determina quale cella dello stato corrisponde a questo cubetto per ogni faccia
+
+        // Faccia Right (x = 1): mappiamo (y, z) su R[riga][colonna]
+        if (x === 1) {
+            const riga = 1 - y;    // y=1 -> riga 0, y=0 -> riga 1, y=-1 -> riga 2
+            const col = z + 1;      // z=-1 -> col 0, z=0 -> col 1, z=1 -> col 2
+            const coloreLetter = cubo.stato.R[riga][col];
+            cubetto.material[0].color.setHex(cubo.getColoreHex(coloreLetter));
+        } else {
+            cubetto.material[0].color.setHex(0x000000);
+        }
+
+        // Faccia Left (x = -1)
+        if (x === -1) {
+            const riga = 1 - y;
+            const col = 1 - z;  // Invertito perché guardiamo da sinistra
+            const coloreLetter = cubo.stato.L[riga][col];
+            cubetto.material[1].color.setHex(cubo.getColoreHex(coloreLetter));
+        } else {
+            cubetto.material[1].color.setHex(0x000000);
+        }
+
+        // Faccia Up (y = 1)
+        if (y === 1) {
+            const riga = 1 - z;
+            const col = x + 1;
+            const coloreLetter = cubo.stato.U[riga][col];
+            cubetto.material[2].color.setHex(cubo.getColoreHex(coloreLetter));
+        } else {
+            cubetto.material[2].color.setHex(0x000000);
+        }
+
+        // Faccia Down (y = -1)
+        if (y === -1) {
+            const riga = z + 1;
+            const col = x + 1;
+            const coloreLetter = cubo.stato.D[riga][col];
+            cubetto.material[3].color.setHex(cubo.getColoreHex(coloreLetter));
+        } else {
+            cubetto.material[3].color.setHex(0x000000);
+        }
+
+        // Faccia Front (z = 1)
+        if (z === 1) {
+            const riga = 1 - y;
+            const col = x + 1;
+            const coloreLetter = cubo.stato.F[riga][col];
+            cubetto.material[4].color.setHex(cubo.getColoreHex(coloreLetter));
+        } else {
+            cubetto.material[4].color.setHex(0x000000);
+        }
+
+        // Faccia Back (z = -1)
+        if (z === -1) {
+            const riga = 1 - y;
+            const col = 1 - x;  // Invertito perché guardiamo da dietro
+            const coloreLetter = cubo.stato.B[riga][col];
+            cubetto.material[5].color.setHex(cubo.getColoreHex(coloreLetter));
+        } else {
+            cubetto.material[5].color.setHex(0x000000);
+        }
+    });
+
+    // Renderizza per mostrare i cambiamenti
+    renderer.render(scene, camera);
+}
 
 // ========== CONTROLLI ==========
-
-document.getElementById('btn-mischia').addEventListener('click', () => {
-
-    // Placeholder - da implementare con mosse casuali
-});
-
-document.getElementById('btn-risolvi').addEventListener('click', () => {
-    // Placeholder - da implementare con algoritmo
-});
 
 document.getElementById('btn-reset').addEventListener('click', () => {
     cubo.reset();
