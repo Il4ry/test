@@ -49,7 +49,7 @@ class CuboRubik {
     Right() { //NON FUNZIONA
         this.stato.R= this.ruotaFaccia(this.stato.R);
         this.aggiorna('R');
-
+        aggiornaColoriCubo3D();
     }
 }
 
@@ -118,7 +118,6 @@ function inizializzaCubo3D() {
         renderer.setSize(width, height);
     });
 }
-
 function creaCubetti() {
     const size = 1;
     const gap = 0.05;
@@ -167,44 +166,54 @@ function creaCubetti() {
                     y * (size + gap),
                     z * (size + gap)
                 );
+                cubetto.userData = { x, y, z };
 
+                console.log(cubetto.userData);
                 // Bordi neri
                 const edges = new THREE.EdgesGeometry(geometry);
                 const line = new THREE.LineSegments(edges, new THREE.LineBasicMaterial({ color: 0x000000, linewidth: 2 }));
                 cubetto.add(line);
 
-                cubetti.push();
+                cubetti.push(cubetto);
                 scene.add(cubetto);
-
-
             }
         }
     }
 }
-  //DA CONTROLLARE LA MAPPATURA
 function aggiornaColoriCubo3D() {
+    console.log("Aggiornamento");
     // Per ogni cubetto nella scena
+    console.log('Materiali primo cubetto:', cubetti[0].material);
+    console.log('cubetti PRIMA del loop:', cubetti)
     cubetti.forEach(cubetto => {
+        console.log("cio");
         const { x, y, z } = cubetto.userData;
+        console.log(cubetto.userData);
+        console.log(cubetto.material);
 
         // Determina quale cella dello stato corrisponde a questo cubetto per ogni faccia
 
         // Faccia Right (x = 1): mappiamo (y, z) su R[riga][colonna]
-        if (x === 1) {
+        if (x === -1) {
+            console.log("faccia dentra");
             const riga = 1 - y;    // y=1 -> riga 0, y=0 -> riga 1, y=-1 -> riga 2
             const col = z + 1;      // z=-1 -> col 0, z=0 -> col 1, z=1 -> col 2
             const coloreLetter = cubo.stato.R[riga][col];
-            cubetto.material[0].color.setHex(cubo.getColoreHex(coloreLetter));
+            cubetto.material[0].color.setHex(cubo.getColoreHex(coloreLetter)); //problema qui!!!!!!
+
         } else {
             cubetto.material[0].color.setHex(0x000000);
+            console.log("destra");
+
         }
 
         // Faccia Left (x = -1)
-        if (x === -1) {
+        if (x === 1) {
             const riga = 1 - y;
             const col = 1 - z;  // Invertito perché guardiamo da sinistra
             const coloreLetter = cubo.stato.L[riga][col];
             cubetto.material[1].color.setHex(cubo.getColoreHex(coloreLetter));
+            console.log("faccia sinistra");
         } else {
             cubetto.material[1].color.setHex(0x000000);
         }
@@ -215,6 +224,7 @@ function aggiornaColoriCubo3D() {
             const col = x + 1;
             const coloreLetter = cubo.stato.U[riga][col];
             cubetto.material[2].color.setHex(cubo.getColoreHex(coloreLetter));
+            console.log("faccia su");
         } else {
             cubetto.material[2].color.setHex(0x000000);
         }
@@ -225,6 +235,7 @@ function aggiornaColoriCubo3D() {
             const col = x + 1;
             const coloreLetter = cubo.stato.D[riga][col];
             cubetto.material[3].color.setHex(cubo.getColoreHex(coloreLetter));
+            console.log("faccia giu");
         } else {
             cubetto.material[3].color.setHex(0x000000);
         }
@@ -235,6 +246,7 @@ function aggiornaColoriCubo3D() {
             const col = x + 1;
             const coloreLetter = cubo.stato.F[riga][col];
             cubetto.material[4].color.setHex(cubo.getColoreHex(coloreLetter));
+            console.log("faccia davanti");
         } else {
             cubetto.material[4].color.setHex(0x000000);
         }
@@ -245,6 +257,7 @@ function aggiornaColoriCubo3D() {
             const col = 1 - x;  // Invertito perché guardiamo da dietro
             const coloreLetter = cubo.stato.B[riga][col];
             cubetto.material[5].color.setHex(cubo.getColoreHex(coloreLetter));
+            console.log("faccia dietro");
         } else {
             cubetto.material[5].color.setHex(0x000000);
         }
@@ -252,6 +265,7 @@ function aggiornaColoriCubo3D() {
 
     // Renderizza per mostrare i cambiamenti
     renderer.render(scene, camera);
+    console.log("fatto");
 }
 
 // ========== CONTROLLI ==========
