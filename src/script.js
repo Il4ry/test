@@ -28,7 +28,7 @@ class CuboRubik {
     }
 
 
-    //(non è vero)funzione che ruota una faccia del cubo
+
     ruotaFaccia(matrice){
         return [
             [matrice[2][0], matrice[1][0], matrice[0][0]],
@@ -39,21 +39,26 @@ class CuboRubik {
     getCol(faccia, indice) { //prende la colonna della faccia che cambia
         return this.stato[faccia].map(row => row[indice]);
     }
-
+    getRow(faccia, indice) {  //prende la riga
+        return this.stato[faccia][indice];
+    }
     // Imposta la colonna 'indice' della faccia specificata
     setCol(faccia, indice, col) {
         this.stato[faccia].forEach((row, i) => row[indice] = col[i]);
     }
+    setRow(faccia, indice, riga) {
+        this.stato[faccia][indice] = riga;
+    }
 
     aggiorna (matrice){
         if (matrice=='R'){
-            const colU = this.getCol('U', 2);//variabili per salvare i colori delle colonne ch cambiano
+            const colU = this.getCol('U', 2);//variabili per salvare i colori delle colonne che cambiano
             const colB = this.getCol('B', 0);
             const colD = this.getCol('D', 2);
             const colF = this.getCol('F', 2);
             this.setCol('D', 2, [colB[2], colB[1], colB[0]]);//B su D
-            this.setCol('F', 2, [colD[2], colD[1], colD[0]]); //salva D su F (giusto)
-            this.setCol('U', 2, colF); //salva la colonna di F su U(giusto)
+            this.setCol('F', 2, colD); //salva D su F
+            this.setCol('U', 2, colF); //salva la colonna di F su U
             this.setCol('B', 0, colU);//salva la colonna di U su B
         }else if(matrice=='L'){
             const colU = this.getCol('U', 0);
@@ -67,16 +72,25 @@ class CuboRubik {
         }else if(matrice=='F'){
             const colR = this.getCol('R', 2);
             const colL = this.getCol('L', 0);
-            const colU = this.getCol('U', 2);
-            const colD = this.getCol('D', 0);
-            this.setCol('R', 2, colU);
-            this.setCol('L', 0, [colD[2], colD[1], colD[0]]);
-            this.setCol('U', 0, colL);
-            //this.setCol('B', 2, colR);
+            const rowU = this.getRow('U', 0);
+            const rowD = this.getRow('D', 2);
+            this.setCol('R', 2, rowU);
+            this.setCol('L', 0, rowD);
+            this.setRow('U', 0, [colL[2], colL[1], colL[0]]);
+            this.setRow('D', 2, [colR[2], colR[1], colR[0]]);
+        }else if(matrice=='B'){
+            const colR = this.getCol('R', 0);
+            const colL = this.getCol('L', 2);
+            const rowU = this.getRow('U', 2);
+            const rowD = this.getRow('D', 0);
+            this.setCol('L', 2, rowU);
+            this.setCol('R', 0, rowD);
+            this.setRow('U', 2, [colR[2], colR[1], colR[0]]);
+            this.setRow('D', 0, [colL[2], colL[1], colL[0]]);
         }
     }
-    //manca come mostrarlo a schermo
-    Right() { //NON FUNZIONA
+
+    Right() {
         this.stato.R= this.ruotaFaccia(this.stato.R);
         this.aggiorna('R');
         aggiornaColoriCubo3D();
@@ -87,7 +101,7 @@ class CuboRubik {
         aggiornaColoriCubo3D();
     }
 
-    Front() { //NON FUNZIONA
+    Front() {
         this.stato.F= this.ruotaFaccia(this.stato.F);
         this.aggiorna('F');
         aggiornaColoriCubo3D();
@@ -97,7 +111,7 @@ class CuboRubik {
         this.aggiorna('B');
         aggiornaColoriCubo3D();
     }
-    Up() { //NON FUNZIONA
+    Up() {
         this.stato.U= this.ruotaFaccia(this.stato.U);
         this.aggiorna('U');
         aggiornaColoriCubo3D();
