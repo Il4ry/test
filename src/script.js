@@ -21,7 +21,7 @@ class CuboRubik {
             'Y': 0xfdfd00,  // Giallo (Yellow)
             'G': 0x00ff00,  // Verde (Green)
             'B': 0x0000ff,  // Blu (Blue)
-            'O': 0xff4500,  // Arancione (Orange)
+            'O': 0xff7314,  // Arancione (Orange)
             'R': 0xff0000   // Rosso (Red)
         };
         return mappaColori[lettera] || 0x000000;  // Ritorna il colore o nero se non trova
@@ -34,6 +34,13 @@ class CuboRubik {
             [matrice[2][0], matrice[1][0], matrice[0][0]],
             [matrice[2][1], matrice[1][1], matrice[0][1]],
             [matrice[2][2], matrice[1][2], matrice[0][2]]
+        ];
+    }
+    ruotaFaccia2(matrice){
+        return [
+            [matrice[0][2], matrice[1][2], matrice[2][2]],
+            [matrice[0][1], matrice[1][1], matrice[2][1]],
+            [matrice[0][0], matrice[1][0], matrice[2][0]]
         ];
     }
     getCol(faccia, indice) { //prende la colonna della faccia che cambia
@@ -51,25 +58,25 @@ class CuboRubik {
     }
 
     aggiorna (matrice){
-        if (matrice=='R'){
+        if (matrice=='R'){//ok
             const colU = this.getCol('U', 2);//variabili per salvare i colori delle colonne che cambiano
             const colB = this.getCol('B', 0);
             const colD = this.getCol('D', 2);
             const colF = this.getCol('F', 2);
-            this.setCol('D', 2, [colB[2], colB[1], colB[0]]);//B su D
-            this.setCol('F', 2, colD); //salva D su F
-            this.setCol('U', 2, colF); //salva la colonna di F su U
+            this.setCol('D', 2, colB);//B su D
+            this.setCol('F', 2, [colD[2], colD[1], colD[0]]); //salva D su F
+            this.setCol('U', 2, [colF[2], colF[1], colF[0]]); //salva la colonna di F su U
             this.setCol('B', 0, colU);//salva la colonna di U su B
-        }else if(matrice=='L'){
+        }else if(matrice=='L'){//ok
             const colU = this.getCol('U', 0);
             const colB = this.getCol('B', 2);
             const colD = this.getCol('D', 0);
             const colF = this.getCol('F', 0);
-            this.setCol('B', 2, [colD[2], colD[1], colD[0]]);
-            this.setCol('U', 0, [colB[2], colB[1], colB[0]]);
-            this.setCol('F', 0, colU); //ok
-            this.setCol('D', 0, colF);
-        }else if(matrice=='F'){
+            this.setCol('B', 2, colD);
+            this.setCol('U', 0, colB);
+            this.setCol('F', 0, [colU[2], colU[1], colU[0]]);
+            this.setCol('D', 0, [colF[2], colF[1], colF[0]]);
+        }else if(matrice=='F'){//ok
             const colR = this.getCol('R', 2);
             const colL = this.getCol('L', 0);
             const rowU = this.getRow('U', 0);
@@ -78,46 +85,64 @@ class CuboRubik {
             this.setCol('L', 0, rowD);
             this.setRow('U', 0, [colL[2], colL[1], colL[0]]);
             this.setRow('D', 2, [colR[2], colR[1], colR[0]]);
-        }else if(matrice=='B'){
+        }else if(matrice=='B'){//ok
             const colR = this.getCol('R', 0);
             const colL = this.getCol('L', 2);
             const rowU = this.getRow('U', 2);
             const rowD = this.getRow('D', 0);
-            this.setCol('L', 2, rowU);
-            this.setCol('R', 0, rowD);
-            this.setRow('U', 2, [colR[2], colR[1], colR[0]]);
-            this.setRow('D', 0, [colL[2], colL[1], colL[0]]);
+            this.setCol('L', 2, [rowU[2], rowU[1], rowU[0]]);
+            this.setCol('R', 0, [rowD[2], rowD[1], rowD[0]]);
+            this.setRow('U', 2, colR);
+            this.setRow('D', 0, colL);
+        }else if(matrice=='U'){// ok
+            const rowR = this.getRow('R', 0);
+            const rowF = this.getRow('F', 0);
+            const rowL = this.getRow('L', 0);
+            const rowB = this.getRow('B', 0);
+            this.setRow('F', 0, [rowR[2], rowR[1], rowR[0]]);
+            this.setRow('L', 0, [rowF[2], rowF[1], rowF[0]]);
+            this.setRow('B', 0, [rowL[2], rowL[1], rowL[0]]);
+            this.setRow('R', 0, [rowB[2], rowB[1], rowB[0]]);
+        } else{
+            const rowR = this.getRow('R', 2);
+            const rowF = this.getRow('F', 2);
+            const rowL = this.getRow('L', 2);
+            const rowB = this.getRow('B', 2);
+            this.setRow('B', 2, [rowR[2], rowR[1], rowR[0]]);
+            this.setRow('R', 2, [rowF[2], rowF[1], rowF[0]]);
+            this.setRow('F', 2, [rowL[2], rowL[1], rowL[0]]);
+            this.setRow('L', 2, [rowB[2], rowB[1], rowB[0]]);
         }
     }
 
-    Right() {
-        this.stato.R= this.ruotaFaccia(this.stato.R);
+    right() {
+        this.stato.R= this.ruotaFaccia2(this.stato.R);
         this.aggiorna('R');
         aggiornaColoriCubo3D();
     }
-    Left(){
-        this.stato.L= this.ruotaFaccia(this.stato.L);
+    left(){
+        this.stato.L= this.ruotaFaccia2(this.stato.L);
         this.aggiorna('L');
         aggiornaColoriCubo3D();
     }
 
-    Front() {
+    front() {
         this.stato.F= this.ruotaFaccia(this.stato.F);
         this.aggiorna('F');
         aggiornaColoriCubo3D();
     }
-    Back(){
+    back(){
         this.stato.B= this.ruotaFaccia(this.stato.B);
         this.aggiorna('B');
         aggiornaColoriCubo3D();
     }
-    Up() {
-        this.stato.U= this.ruotaFaccia(this.stato.U);
+    up() {
+        this.stato.U= this.ruotaFaccia2(this.stato.U);
         this.aggiorna('U');
         aggiornaColoriCubo3D();
     }
-    Down(){
-        this.stato.D= this.ruotaFaccia(this.stato.D);
+    down(){
+        this.stato.D= this.ruotaFaccia2(this.stato.D);
         this.aggiorna('D');
         aggiornaColoriCubo3D();
     }
@@ -194,7 +219,7 @@ function creaCubetti() {
 
     const coloriMap = {
         'x1': 0xff0000,   // Rosso (Right)
-        'x-1': 0xff4500,  // Arancione (Left)
+        'x-1': 0xff7314,  // Arancione (Left)
         'y1': 0xffffff,   // Bianco (Up)
         'y-1': 0xfdfd00,  // Giallo (Down)
         'z1': 0x00ff00,   // Verde (Front)
@@ -320,10 +345,35 @@ function aggiornaColoriCubo3D() {
 
     // Renderizza per mostrare i cambiamenti
     renderer.render(scene, camera);
-    console.log("fatto");
 }
 
 // ========== CONTROLLI ==========
+document.getElementById('btn-mischia').addEventListener('click', () => {
+    nMosse= Math.floor(Math.random() * (20 - 4 + 1)) + 4;//math.random prende numeri tra 0 e 1, x alzare il range Math.floor(Math.random() * (max - min + 1)) + min;
+    for (i=0; i<nMosse; i++){
+        indice= Math.floor(Math.random() * (6 - 1 + 1)) + 1;
+        if (indice ==1){
+        cubo.up();
+        console.log('up');
+        }else if(indice==2){
+        cubo.down();
+        console.log('down');
+        }else if(indice==3){
+        cubo.right();
+        console.log('right');
+        }else if(indice==4){
+        cubo.left();
+        console.log('left');
+        }else if(indice==5){
+        cubo.front();
+        console.log('front');
+        }else{
+        cubo.back();
+        console.log('back');
+        }
+    }
+});
+
 
 document.getElementById('btn-reset').addEventListener('click', () => {
     cubo.reset();

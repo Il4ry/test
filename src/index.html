@@ -19,21 +19,21 @@
     <!-- PANNELLO CONTROLLI -->
     <div class="pulsanti">
         <div class="controlli">
-            <button id="btn-reset">🔄 Reset</button>
+            <button id="btn-reset">Reset</button>
+            <button id="btn-mischia">Mischia</button>
+
         </div>
 
         <div class="mosse">
-            <button id="up" onclick="cubo.Up()">U</button>
-            <div class="centro">
-                <button id="left" onclick="cubo.Left()">L</button>
-                <button id="front" onclick="cubo.Front()">F</button>
-                <button id="right" onclick="cubo.Right()">R</button>
+            <div>
+            <button id="up" onclick="cubo.up()">W</button>
+            <button id="front" onclick="cubo.front()">G</button>
+            <button id="right" onclick="cubo.right()">R</button>
+            </div><div>
+            <button id="down" onclick="cubo.down()">Y</button>
+            <button id="back" onclick="cubo.back()">B</button>
+            <button id="left" onclick="cubo.left()">O</button>
             </div>
-            <button id="down" onclick="cubo.Down()">D</button>
-
-        </div>
-        <div class="dietro">
-            <button id="back" onclick="cubo.Back()">B</button>
         </div>
     </div>
 </div>
