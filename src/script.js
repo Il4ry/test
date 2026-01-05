@@ -115,33 +115,33 @@ class CuboRubik {
         }
     }
 
-    right() {
+    red() {
         this.stato.R= this.ruotaFaccia2(this.stato.R);
         this.aggiorna('R');
         aggiornaColoriCubo3D();
     }
-    left(){
+    orange(){
         this.stato.L= this.ruotaFaccia2(this.stato.L);
         this.aggiorna('L');
         aggiornaColoriCubo3D();
     }
 
-    front() {
+    green() {
         this.stato.F= this.ruotaFaccia(this.stato.F);
         this.aggiorna('F');
         aggiornaColoriCubo3D();
     }
-    back(){
+    blu(){
         this.stato.B= this.ruotaFaccia(this.stato.B);
         this.aggiorna('B');
         aggiornaColoriCubo3D();
     }
-    up() {
+    white() {
         this.stato.U= this.ruotaFaccia2(this.stato.U);
         this.aggiorna('U');
         aggiornaColoriCubo3D();
     }
-    down(){
+    yellow(){
         this.stato.D= this.ruotaFaccia2(this.stato.D);
         this.aggiorna('D');
         aggiornaColoriCubo3D();
@@ -280,7 +280,7 @@ function aggiornaColoriCubo3D() {
 
         // Determina quale cella dello stato corrisponde a questo cubetto per ogni faccia
 
-        // Faccia Right (x = 1): mappiamo (y, z) su R[riga][colonna]
+        // Faccia rossa (x = 1): mappiamo (y, z) su R[riga][colonna]
         if (x === 1) {
             const riga = 1 - y;    // y=1 -> riga 0, y=0 -> riga 1, y=-1 -> riga 2
             const col = z + 1;      // z=-1 -> col 0, z=0 -> col 1, z=1 -> col 2
@@ -292,7 +292,7 @@ function aggiornaColoriCubo3D() {
 
         }
 
-        // Faccia Left (x = -1)
+        // Faccia arancione (x = -1)
         if (x === -1) {
             const riga = 1 - y;
             const col = 1 - z;  // Invertito perché guardiamo da sinistra
@@ -302,7 +302,7 @@ function aggiornaColoriCubo3D() {
             cubetto.material[1].color.setHex(0x000000);
         }
 
-        // Faccia Up (y = 1)
+        // Faccia bianca (y = 1)
         if (y === 1) {
             const riga = 1 - z;
             const col = x + 1;
@@ -312,7 +312,7 @@ function aggiornaColoriCubo3D() {
             cubetto.material[2].color.setHex(0x000000);
         }
 
-        // Faccia Down (y = -1)
+        // Faccia gialla (y = -1)
         if (y === -1) {
             const riga = z + 1;
             const col = x + 1;
@@ -322,7 +322,7 @@ function aggiornaColoriCubo3D() {
             cubetto.material[3].color.setHex(0x000000);
         }
 
-        // Faccia Front (z = 1)
+        // Faccia verde (z = 1)
         if (z === 1) {
             const riga = 1 - y;
             const col = x + 1;
@@ -332,7 +332,7 @@ function aggiornaColoriCubo3D() {
             cubetto.material[4].color.setHex(0x000000);
         }
 
-        // Faccia Back (z = -1)
+        // Faccia blu (z = -1)
         if (z === -1) {
             const riga = 1 - y;
             const col = 1 - x;  // Invertito perché guardiamo da dietro
@@ -353,23 +353,17 @@ document.getElementById('btn-mischia').addEventListener('click', () => {
     for (i=0; i<nMosse; i++){
         indice= Math.floor(Math.random() * (6 - 1 + 1)) + 1;
         if (indice ==1){
-        cubo.up();
-        console.log('up');
+        cubo.white();
         }else if(indice==2){
-        cubo.down();
-        console.log('down');
+        cubo.yellow();
         }else if(indice==3){
-        cubo.right();
-        console.log('right');
+        cubo.red();
         }else if(indice==4){
-        cubo.left();
-        console.log('left');
+        cubo.orange();
         }else if(indice==5){
-        cubo.front();
-        console.log('front');
+        cubo.green();
         }else{
         cubo.back();
-        console.log('back');
         }
     }
 });
@@ -391,7 +385,6 @@ document.getElementById('btn-reset').addEventListener('click', () => {
 
         // Ripristina rotazione a zero
         cubetto.rotation.set(0, 0, 0);
-        cubetto.quaternion.set(0, 0, 0, 1);
     });
 
     // 3. Aggiorna i colori per corrispondere allo stato iniziale
